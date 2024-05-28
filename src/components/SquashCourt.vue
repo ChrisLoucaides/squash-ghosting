@@ -14,7 +14,12 @@
             width="78" height="73.67" :fill="color"/>
     </svg>
   </div>
-  <button @click="startColorCycle">Start Ghosting</button>
+  <button v-if="!intervalId && countdown === 0" @click="startColorCycle">
+    Start Ghosting
+  </button>
+  <button v-else @click="stopColorCycle">
+    Stop Ghosting
+  </button>
 </template>
 
 <script>
@@ -35,6 +40,9 @@ export default {
       }, 2000);
     },
     startColorCycle() {
+      if (this.intervalId || this.countdown > 0) {
+        return;
+      }
       this.countdown = 3;
       const countdownInterval = setInterval(() => {
         this.countdown -= 1;
@@ -44,11 +52,14 @@ export default {
             const index = Math.floor(Math.random() * this.gridColors.length);
             this.changeColor(index);
           }, 3000);
-          setTimeout(() => {
-            clearInterval(this.intervalId);
-          }, 30000);
         }
       }, 1000);
+    },
+    stopColorCycle() {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+      this.countdown = 0;
+      this.gridColors.fill('transparent');
     }
   }
 }
