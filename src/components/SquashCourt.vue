@@ -21,7 +21,7 @@
     Stop Ghosting
   </button>
   <br>
-  <select v-model="difficulty">
+  <select v-model="difficulty" :class="difficultyClass">
     <option value="easy">Easy</option>
     <option value="medium">Medium</option>
     <option value="hard">Hard</option>
@@ -47,7 +47,19 @@ export default {
         case 'hard':
           return 1500;
         default:
-          return 3000;
+          return 3000; // Easy
+      }
+    },
+    difficultyClass() {
+      switch (this.difficulty) {
+        case 'easy':
+          return 'easy';
+        case 'medium':
+          return 'medium';
+        case 'hard':
+          return 'hard';
+        default:
+          return '';
       }
     }
   },
@@ -91,6 +103,10 @@ export default {
   align-items: center;
 }
 
+button {
+  font-size: 1.5em;
+}
+
 button, select {
   margin-top: 10px;
 }
@@ -108,5 +124,33 @@ button, select {
 
 .stop {
   background-color: #57010e;
+}
+
+select {
+  margin-top: 10px;
+  padding: 1em 2em;
+  border: none;
+  border-radius: 30px;
+  background-color: #f4f4f4;
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+}
+
+.easy {
+  color: green;
+  border: 3px solid green;
+}
+
+.medium {
+  color: orange;
+  border: 3px solid orange;
+}
+
+.hard {
+  color: red;
+  border: 3px solid red;
 }
 </style>
