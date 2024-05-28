@@ -14,10 +14,10 @@
             width="78" height="73.67" :fill="color"/>
     </svg>
   </div>
-  <button v-if="!intervalId && countdown === 0" @click="startColorCycle">
+  <button class="start" v-if="!intervalId && countdown === 0" @click="startColorCycle">
     Start Ghosting
   </button>
-  <button v-else @click="stopColorCycle">
+  <button class="stop" v-else @click="stopColorCycle">
     Stop Ghosting
   </button>
 </template>
@@ -81,5 +81,13 @@ button {
   top: 3em;
   font-size: 7em;
   color: #161c25;
+}
+
+.start {
+  background-color: green;
+}
+
+.stop {
+  background-color: #57010e;
 }
 </style>
