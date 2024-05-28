@@ -20,6 +20,12 @@
   <button class="stop" v-else @click="stopColorCycle">
     Stop Ghosting
   </button>
+  <br>
+  <select v-model="difficulty">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
 </template>
 
 <script>
@@ -29,15 +35,28 @@ export default {
     return {
       gridColors: Array(6).fill('transparent'),
       intervalId: null,
-      countdown: 0
+      countdown: 0,
+      difficulty: 'easy'
     };
+  },
+  computed: {
+    colorChangeInterval() {
+      switch (this.difficulty) {
+        case 'medium':
+          return 2500;
+        case 'hard':
+          return 1500;
+        default:
+          return 3000;
+      }
+    }
   },
   methods: {
     changeColor(index) {
       this.gridColors[index] = 'rgba(0, 255, 0, 0.6)';
       setTimeout(() => {
         this.gridColors[index] = 'transparent';
-      }, 2000);
+      }, 500);
     },
     startColorCycle() {
       if (this.intervalId || this.countdown > 0) {
@@ -51,7 +70,7 @@ export default {
           this.intervalId = setInterval(() => {
             const index = Math.floor(Math.random() * this.gridColors.length);
             this.changeColor(index);
-          }, 3000);
+          }, this.colorChangeInterval);
         }
       }, 1000);
     },
@@ -72,7 +91,7 @@ export default {
   align-items: center;
 }
 
-button {
+button, select {
   margin-top: 10px;
 }
 
