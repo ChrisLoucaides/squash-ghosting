@@ -8,12 +8,12 @@
       <line x1="40" y1="125" x2="40" y2="160" stroke="red"/>
       <line x1="1" y1="160" x2="40.5" y2="160" stroke="red"/>
       <line x1="119.5" y1="160" x2="159" y2="160" stroke="red"/>
-      <!-- Update to a 2x3 grid -->
       <rect v-for="(color, index) in gridColors" :key="index"
             :x="1 + (index % 2) * 79" :y="1 + Math.floor(index / 2) * 73.67"
             width="78" height="73.67" :fill="color"/>
     </svg>
   </div>
+  <button @click="startColorCycle">Start Ghosting</button>
 </template>
 
 <script>
@@ -21,12 +21,29 @@ export default {
   name: 'SquashCourt',
   data() {
     return {
-      gridColors: Array(6).fill('transparent')
+      gridColors: Array(6).fill('transparent'),
+      intervalId: null
     };
   },
   methods: {
-    changeColor(index, color) {
-      this.gridColors[index] = color;
+    changeColor(index) {
+      this.gridColors[index] = 'rgba(0, 255, 0, 0.6)';
+      setTimeout(() => {
+        this.gridColors[index] = 'transparent';
+      }, 2000);
+    },
+    startColorCycle() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+      }
+      this.intervalId = setInterval(() => {
+        const index = Math.floor(Math.random() * this.gridColors.length);
+        this.changeColor(index);
+      }, 3000);
+
+      setTimeout(() => {
+        clearInterval(this.intervalId);
+      }, 30000);
     }
   }
 }
@@ -37,5 +54,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+button {
+  margin-top: 10px;
 }
 </style>
