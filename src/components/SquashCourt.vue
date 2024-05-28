@@ -1,5 +1,6 @@
 <template>
   <div id="line-drawing">
+    <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
     <svg width="480" height="669" viewBox="0 0 160 223" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="158" height="221" fill="none" stroke="red"/>
       <line x1="1" y1="125" x2="159" y2="125" stroke="red"/>
@@ -22,7 +23,8 @@ export default {
   data() {
     return {
       gridColors: Array(6).fill('transparent'),
-      intervalId: null
+      intervalId: null,
+      countdown: 0
     };
   },
   methods: {
@@ -33,17 +35,20 @@ export default {
       }, 2000);
     },
     startColorCycle() {
-      if (this.intervalId) {
-        clearInterval(this.intervalId);
-      }
-      this.intervalId = setInterval(() => {
-        const index = Math.floor(Math.random() * this.gridColors.length);
-        this.changeColor(index);
-      }, 3000);
-
-      setTimeout(() => {
-        clearInterval(this.intervalId);
-      }, 30000);
+      this.countdown = 3;
+      const countdownInterval = setInterval(() => {
+        this.countdown -= 1;
+        if (this.countdown === 0) {
+          clearInterval(countdownInterval);
+          this.intervalId = setInterval(() => {
+            const index = Math.floor(Math.random() * this.gridColors.length);
+            this.changeColor(index);
+          }, 3000);
+          setTimeout(() => {
+            clearInterval(this.intervalId);
+          }, 30000);
+        }
+      }, 1000);
     }
   }
 }
@@ -55,7 +60,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 button {
   margin-top: 10px;
+}
+
+.countdown {
+  position: absolute;
+  top: 3em;
+  font-size: 7em;
+  color: #161c25;
 }
 </style>
