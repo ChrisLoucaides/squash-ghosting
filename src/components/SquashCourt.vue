@@ -22,9 +22,9 @@
   </button>
   <br>
   <select v-model="difficulty" :class="difficultyClass">
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="hard">Hard</option>
+    <option class="difficulty-class" value="easy">Easy</option>
+    <option class="difficulty-class" value="medium">Medium</option>
+    <option class="difficulty-class" value="hard">Hard</option>
   </select>
   <select class="ghosting-time" v-model="cycleDuration">
     <option v-for="seconds in durationOptions" :value="seconds" :key="seconds">
@@ -90,7 +90,6 @@ export default {
             const index = Math.floor(Math.random() * this.gridColors.length);
             this.changeColor(index);
           }, this.colorChangeInterval);
-          // Set timeout to stop the cycle based on the selected duration
           setTimeout(() => {
             this.stopColorCycle();
           }, this.cycleDuration * 1000);
@@ -175,5 +174,9 @@ select {
 .hard {
   color: red;
   border: 3px solid red;
+}
+
+.difficulty-class {
+  color: #1a1a1a;
 }
 </style>
