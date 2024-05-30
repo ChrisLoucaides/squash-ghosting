@@ -47,7 +47,7 @@ export default {
         case 'hard':
           return 1500;
         default:
-          return 3000; // Easy
+          return 3000;
       }
     },
     difficultyClass() {
