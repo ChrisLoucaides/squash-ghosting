@@ -26,6 +26,11 @@
     <option value="medium">Medium</option>
     <option value="hard">Hard</option>
   </select>
+  <select class="ghosting-time" v-model="cycleDuration">
+    <option v-for="seconds in durationOptions" :value="seconds" :key="seconds">
+      {{ formatDuration(seconds) }}
+    </option>
+  </select>
 </template>
 
 <script>
@@ -36,7 +41,9 @@ export default {
       gridColors: Array(6).fill('transparent'),
       intervalId: null,
       countdown: 0,
-      difficulty: 'easy'
+      difficulty: 'easy',
+      cycleDuration: 15,  // Default duration in seconds
+      durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
     };
   },
   computed: {
@@ -83,6 +90,10 @@ export default {
             const index = Math.floor(Math.random() * this.gridColors.length);
             this.changeColor(index);
           }, this.colorChangeInterval);
+          // Set timeout to stop the cycle based on the selected duration
+          setTimeout(() => {
+            this.stopColorCycle();
+          }, this.cycleDuration * 1000);
         }
       }, 1000);
     },
@@ -91,6 +102,11 @@ export default {
       this.intervalId = null;
       this.countdown = 0;
       this.gridColors.fill('transparent');
+    },
+    formatDuration(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}m ${remainingSeconds}s`;
     }
   }
 }
@@ -112,7 +128,7 @@ button, select {
 }
 
 .countdown {
-  position: absolute;
+  position:absolute;
   top: 3em;
   font-size: 7em;
   color: #161c25;
@@ -128,6 +144,8 @@ button, select {
 
 select {
   margin-top: 10px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   padding: 1em 2em;
   border: none;
   border-radius: 30px;
@@ -137,6 +155,11 @@ select {
   color: #333;
   outline: none;
   cursor: pointer;
+}
+
+.ghosting-time {
+  color: black;
+  border: 3px solid #3f3d3d;
 }
 
 .easy {
