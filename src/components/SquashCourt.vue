@@ -31,6 +31,14 @@
       {{ formatDuration(seconds) }}
     </option>
   </select>
+  <br>
+  <select class="ghosting-time">
+    <option class="rally-type" value="easy">Full Court</option>
+    <option class="rally-type" value="easy">Backhand rally</option>
+    <option class="rally-type" value="easy">Forehand rally</option>
+    <option class="rally-type" value="easy">Volleys</option>
+    <option class="rally-type" value="easy">Short game</option>
+  </select>
 </template>
 
 <script>
@@ -111,6 +119,7 @@ export default {
 }
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 #line-drawing {
   display: flex;
