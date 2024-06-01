@@ -42,7 +42,7 @@ export default {
       intervalId: null,
       countdown: 0,
       difficulty: 'easy',
-      cycleDuration: 15,  // Default duration in seconds
+      cycleDuration: 15,
       durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
     };
   },
@@ -127,7 +127,7 @@ button, select {
 }
 
 .countdown {
-  position:absolute;
+  position: absolute;
   top: 3em;
   font-size: 7em;
   color: #161c25;
