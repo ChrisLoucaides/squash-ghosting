@@ -32,12 +32,12 @@
     </option>
   </select>
   <br>
-  <select class="ghosting-time">
-    <option class="rally-type" value="easy">Full Court</option>
-    <option class="rally-type" value="easy">Backhand rally</option>
-    <option class="rally-type" value="easy">Forehand rally</option>
-    <option class="rally-type" value="easy">Volleys</option>
-    <option class="rally-type" value="easy">Short game</option>
+  <select class="ghosting-time" v-model="rallyType">
+    <option value="full">Full Court</option>
+    <option value="backhand">Backhand rally</option>
+    <option value="forehand">Forehand rally</option>
+    <option value="volleys">Volleys</option>
+    <option value="short">Short game</option>
   </select>
 </template>
 
@@ -51,7 +51,8 @@ export default {
       countdown: 0,
       difficulty: 'easy',
       cycleDuration: 15,
-      durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
+      durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150],
+      rallyType: 'full'
     };
   },
   computed: {
@@ -79,7 +80,26 @@ export default {
     }
   },
   methods: {
-    changeColor(index) {
+    changeColor() {
+      let index;
+      switch (this.rallyType) {
+        case 'backhand':
+          index = Math.random() < 0.7 ? (Math.random() < 0.5 ? 0 : 2) : Math.floor(Math.random() * 6);
+          break;
+        case 'forehand':
+          index = Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 3) : Math.floor(Math.random() * 6);
+          break;
+        case 'volleys':
+          index = [2, 3][Math.floor(Math.random() * 2)];
+          break;
+        case 'short':
+          index = [0, 1][Math.floor(Math.random() * 2)];
+          break;
+        case 'full':
+        default:
+          index = Math.floor(Math.random() * 6);
+          break;
+      }
       this.gridColors[index] = 'rgba(0, 255, 0, 0.6)';
       setTimeout(() => {
         this.gridColors[index] = 'transparent';
@@ -94,10 +114,7 @@ export default {
         this.countdown -= 1;
         if (this.countdown === 0) {
           clearInterval(countdownInterval);
-          this.intervalId = setInterval(() => {
-            const index = Math.floor(Math.random() * this.gridColors.length);
-            this.changeColor(index);
-          }, this.colorChangeInterval);
+          this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
           setTimeout(() => {
             this.stopColorCycle();
           }, this.cycleDuration * 1000);
