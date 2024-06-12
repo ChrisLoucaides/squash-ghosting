@@ -18,6 +18,12 @@ The time interval is also determined by the user from a range of 15 seconds, up 
 By having randomised patterns, these ghosting sessions can now also be more reaction based, better simulating the conditions
 of a rally.
 
+To add to this, a "Rally Type" selector has also been added. This allows for ghosting patterns to be unrestricted to the
+whole of the court, but specific rally types have also been added:
+- Backhand and Forehand rallies focus mainly on those areas, but the occasional shot in another area of the court will happen to keep the exercise reactive.
+- Volleys only focus on the middle of the middle of the court.
+- Short game only focuses in the front two corners of the court.
+
 ## Getting this project set up locally
 
 1. Install dependencies
