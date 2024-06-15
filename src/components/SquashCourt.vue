@@ -43,6 +43,7 @@
 
 <script>
 // noinspection JSUnusedGlobalSymbols
+// TODO: Add sounds for each shot type
 export default {
   name: 'SquashCourt',
   data() {
