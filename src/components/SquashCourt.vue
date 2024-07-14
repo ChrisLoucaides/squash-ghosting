@@ -43,7 +43,6 @@
 
 <script>
 // noinspection JSUnusedGlobalSymbols
-// TODO: Add sounds for each shot type
 export default {
   name: 'SquashCourt',
   data() {
@@ -54,7 +53,15 @@ export default {
       difficulty: 'easy',
       cycleDuration: 15,
       durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150],
-      rallyType: 'full'
+      rallyType: 'full',
+      sounds: [
+        new Audio('/sounds/front-left.mp3'),
+        new Audio('/sounds/front-right.mp3'),
+        new Audio('/sounds/middle-left.mp3'),
+        new Audio('/sounds/middle-right.mp3'),
+        new Audio('/sounds/back-left.mp3'),
+        new Audio('/sounds/back-right.mp3')
+      ]
     };
   },
   computed: {
@@ -82,6 +89,12 @@ export default {
     }
   },
   methods: {
+    playSound(index) {
+      if (this.sounds[index]) {
+        this.sounds[index].currentTime = 0;
+        this.sounds[index].play();
+      }
+    },
     changeColor() {
       let index;
       switch (this.rallyType) {
@@ -103,6 +116,7 @@ export default {
           break;
       }
       this.gridColors[index] = 'rgba(0, 255, 0, 0.6)';
+      this.playSound(index);
       setTimeout(() => {
         this.gridColors[index] = 'transparent';
       }, 500);
