@@ -1,7 +1,28 @@
 <template>
-  <hgroup>
-    <h2 class="heading">Squash Ghoster (Beta)</h2>
-    <h2 class="heading">How to use</h2>
+  <hgroup class="heading">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <strong>Squash Ghoster (Beta) - How to use</strong>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">Squash Ghoster (Beta)</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ghoster-info">
+            <!--TODO Implement Me-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </hgroup>
   <div id="line-drawing">
     <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
@@ -43,6 +64,7 @@
     <option value="volleys">Volleys</option>
     <option value="short">Short game</option>
   </select>
+  <br>
 </template>
 
 <script>
@@ -180,7 +202,8 @@ button, select {
   justify-content: center;
   align-items: center;
   color: #1a1a1a;
-  margin-top: -1em;
+  margin-top: -2em;
+  margin-bottom: 0.3em;
 }
 
 .countdown {
@@ -211,10 +234,6 @@ select {
   color: #333;
   outline: none;
   cursor: pointer;
-}
-
-hgroup {
-  margin-bottom: -1.3em;
 }
 
 .ghosting-time {
