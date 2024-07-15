@@ -94,11 +94,11 @@ export default {
     colorChangeInterval() {
       switch (this.difficulty) {
         case 'medium':
-          return 2500;
+          return 2800;
         case 'hard':
-          return 1500;
+          return 1900;
         default:
-          return 3000;
+          return 3500;
       }
     },
     difficultyClass() {
