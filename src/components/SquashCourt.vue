@@ -158,6 +158,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
 }
 
 button {
@@ -209,8 +212,8 @@ select {
 }
 
 .medium {
-  color: orange;
-  border: 3px solid orange;
+  color: #d46e00;
+  border: 3px solid #d46e00;
 }
 
 .hard {
