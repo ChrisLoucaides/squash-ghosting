@@ -1,4 +1,8 @@
 <template>
+  <hgroup>
+    <h2 class="heading">Squash Ghoster (Beta)</h2>
+    <h2 class="heading">How to use</h2>
+  </hgroup>
   <div id="line-drawing">
     <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
     <svg width="480" height="669" viewBox="0 0 160 223" xmlns="http://www.w3.org/2000/svg">
@@ -171,6 +175,14 @@ button, select {
   margin-top: 10px;
 }
 
+.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #1a1a1a;
+  margin-top: -1em;
+}
+
 .countdown {
   position: absolute;
   top: 3em;
@@ -199,6 +211,10 @@ select {
   color: #333;
   outline: none;
   cursor: pointer;
+}
+
+hgroup {
+  margin-bottom: -1.3em;
 }
 
 .ghosting-time {
