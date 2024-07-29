@@ -15,6 +15,9 @@
           </div>
           <div class="modal-body ghoster-info">
             <!--TODO Implement Me-->
+            <!--How to use-->
+            <!--Rally types-->
+            <!--Any more relevant info-->
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
