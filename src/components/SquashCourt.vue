@@ -1,11 +1,9 @@
 <template>
   <hgroup class="heading">
-    <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
       <strong>Squash Ghoster (Beta) - How to use</strong>
     </button>
 
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -27,39 +25,48 @@
       </div>
     </div>
   </hgroup>
-  <div id="line-drawing">
-    <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
-    <svg width="480" height="669" viewBox="0 0 160 223" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="158" height="221" fill="none" stroke="red"/>
-      <line x1="1" y1="125" x2="159" y2="125" stroke="red"/>
-      <line x1="80" y1="125" x2="80" y2="222" stroke="red"/>
-      <line x1="120" y1="125" x2="120" y2="160" stroke="red"/>
-      <line x1="40" y1="125" x2="40" y2="160" stroke="red"/>
-      <line x1="1" y1="160" x2="40.5" y2="160" stroke="red"/>
-      <line x1="119.5" y1="160" x2="159" y2="160" stroke="red"/>
-      <rect v-for="(color, index) in gridColors" :key="index"
-            :x="1 + (index % 2) * 79" :y="1 + Math.floor(index / 2) * 73.67"
-            width="78" height="73.67" :fill="color"/>
-    </svg>
+
+  <div class="centered">
+    <div id="line-drawing">
+      <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
+      <svg width="480" height="669" viewBox="0 0 160 223" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="158" height="221" fill="none" stroke="red"/>
+        <line x1="1" y1="125" x2="159" y2="125" stroke="red"/>
+        <line x1="80" y1="125" x2="80" y2="222" stroke="red"/>
+        <line x1="120" y1="125" x2="120" y2="160" stroke="red"/>
+        <line x1="40" y1="125" x2="40" y2="160" stroke="red"/>
+        <line x1="1" y1="160" x2="40.5" y2="160" stroke="red"/>
+        <line x1="119.5" y1="160" x2="159" y2="160" stroke="red"/>
+        <rect v-for="(color, index) in gridColors" :key="index"
+              :x="1 + (index % 2) * 79" :y="1 + Math.floor(index / 2) * 73.67"
+              width="78" height="73.67" :fill="color"/>
+      </svg>
+    </div>
   </div>
+
   <button class="start" v-if="!intervalId && countdown === 0" @click="startColorCycle">
     Start Ghosting
   </button>
   <button class="stop" v-else @click="stopColorCycle">
     Stop Ghosting
   </button>
+
   <br>
+
   <select v-model="difficulty" :class="difficultyClass">
     <option class="difficulty-class" value="easy">Easy</option>
     <option class="difficulty-class" value="medium">Medium</option>
     <option class="difficulty-class" value="hard">Hard</option>
   </select>
+
   <select class="ghosting-time" v-model="cycleDuration">
     <option v-for="seconds in durationOptions" :value="seconds" :key="seconds">
       {{ formatDuration(seconds) }}
     </option>
   </select>
+
   <br>
+
   <select class="ghosting-time" v-model="rallyType">
     <option value="full">Full Court</option>
     <option value="backhand">Backhand rally</option>
@@ -67,11 +74,23 @@
     <option value="volleys">Volleys</option>
     <option value="short">Short game</option>
   </select>
+
+  <select class="ghosting-time" v-model="sets">
+    <option v-for="n in 20" :key="n" :value="n">
+      {{ n }} Set{{ n > 1 ? 's' : '' }}
+    </option>
+  </select>
+
+  <select class="ghosting-time" v-model="cooldown">
+    <option v-for="cool in cooldownOptions" :value="cool" :key="cool">
+      {{ formatDuration(cool) }} cooldown
+    </option>
+  </select>
+
   <br>
 </template>
 
 <script>
-// noinspection JSUnusedGlobalSymbols
 export default {
   name: 'SquashCourt',
   data() {
@@ -81,8 +100,11 @@ export default {
       countdown: 0,
       difficulty: 'easy',
       cycleDuration: 15,
+      cooldown: 10,
       durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150],
+      cooldownOptions: [10, 20, 30, 40, 50, 60],
       rallyType: 'full',
+      sets: 1,
       sounds: [
         new Audio('/sounds/front-left.mp3'),
         new Audio('/sounds/front-right.mp3'),
@@ -151,18 +173,32 @@ export default {
       }, 500);
     },
     startColorCycle() {
-      if (this.intervalId || this.countdown > 0) {
-        return;
-      }
+      if (this.intervalId || this.countdown > 0) return;
+
       this.countdown = 3;
+      let currentSet = 0;
+
       const countdownInterval = setInterval(() => {
         this.countdown -= 1;
         if (this.countdown === 0) {
           clearInterval(countdownInterval);
-          this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
-          setTimeout(() => {
-            this.stopColorCycle();
-          }, this.cycleDuration * 1000);
+
+          const runSet = () => {
+            this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
+
+            setTimeout(() => {
+              clearInterval(this.intervalId);
+              this.intervalId = null;
+              this.gridColors.fill('transparent');
+              currentSet++;
+
+              if (currentSet < this.sets) {
+                setTimeout(runSet, this.cooldown * 1000); // Apply cooldown
+              }
+            }, this.cycleDuration * 1000);
+          };
+
+          runSet();
         }
       }, 1000);
     },
@@ -175,13 +211,12 @@ export default {
     formatDuration(seconds) {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
-      return `${minutes}m ${remainingSeconds}s`;
+      return `${minutes > 0 ? minutes + 'm ' : ''}${remainingSeconds}s`;
     }
   }
-}
+};
 </script>
 
-<!--suppress CssUnusedSymbol -->
 <style scoped>
 #line-drawing {
   display: flex;
@@ -190,6 +225,12 @@ export default {
   width: 100%;
   max-width: 480px;
   height: auto;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button {
