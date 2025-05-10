@@ -13,9 +13,6 @@
           </div>
           <div class="modal-body ghoster-info">
             <!--TODO Implement Me-->
-            <!--How to use-->
-            <!--Rally types-->
-            <!--Any more relevant info-->
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -29,6 +26,9 @@
   <div class="centered">
     <div id="line-drawing">
       <div v-if="countdown > 0" class="countdown">{{ countdown }}</div>
+      <h1 v-else-if="setCountdown > 0" class="countdown" style="color: #cb0202">{{ setCountdown }}s</h1>
+      <h1 v-else-if="cooldownCountdown > 0" class="countdown" style="color: #646cff">{{ cooldownCountdown }}s</h1>
+
       <svg width="480" height="669" viewBox="0 0 160 223" xmlns="http://www.w3.org/2000/svg">
         <rect x="1" y="1" width="158" height="221" fill="none" stroke="red"/>
         <line x1="1" y1="125" x2="159" y2="125" stroke="red"/>
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <button class="start" v-if="!intervalId && countdown === 0" @click="startColorCycle">
+  <button class="start" v-if="!intervalId && countdown === 0 && setCountdown === 0 && cooldownCountdown === 0" @click="startColorCycle">
     Start Ghosting
   </button>
   <button class="stop" v-else @click="stopColorCycle">
@@ -98,13 +98,15 @@ export default {
       gridColors: Array(6).fill('transparent'),
       intervalId: null,
       countdown: 0,
+      setCountdown: 0,
+      cooldownCountdown: 0,
       difficulty: 'easy',
       cycleDuration: 15,
       cooldown: 10,
+      sets: 1,
+      rallyType: 'full',
       durationOptions: [15, 30, 45, 60, 75, 90, 105, 120, 135, 150],
       cooldownOptions: [10, 20, 30, 40, 50, 60],
-      rallyType: 'full',
-      sets: 1,
       sounds: [
         new Audio('/sounds/front-left.mp3'),
         new Audio('/sounds/front-right.mp3'),
@@ -118,25 +120,13 @@ export default {
   computed: {
     colorChangeInterval() {
       switch (this.difficulty) {
-        case 'medium':
-          return 2800;
-        case 'hard':
-          return 1900;
-        default:
-          return 3500;
+        case 'medium': return 2800;
+        case 'hard': return 1900;
+        default: return 3500;
       }
     },
     difficultyClass() {
-      switch (this.difficulty) {
-        case 'easy':
-          return 'easy';
-        case 'medium':
-          return 'medium';
-        case 'hard':
-          return 'hard';
-        default:
-          return '';
-      }
+      return this.difficulty;
     }
   },
   methods: {
@@ -178,40 +168,57 @@ export default {
       this.countdown = 3;
       let currentSet = 0;
 
-      const countdownInterval = setInterval(() => {
-        this.countdown -= 1;
+      const preStart = setInterval(() => {
+        this.countdown--;
         if (this.countdown === 0) {
-          clearInterval(countdownInterval);
-
-          const runSet = () => {
-            this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
-
-            setTimeout(() => {
-              clearInterval(this.intervalId);
-              this.intervalId = null;
-              this.gridColors.fill('transparent');
-              currentSet++;
-
-              if (currentSet < this.sets) {
-                setTimeout(runSet, this.cooldown * 1000); // Apply cooldown
-              }
-            }, this.cycleDuration * 1000);
-          };
-
-          runSet();
+          clearInterval(preStart);
+          this.runSet(currentSet);
         }
       }, 1000);
+    },
+    runSet(currentSet) {
+      this.setCountdown = this.cycleDuration;
+
+      const setTimer = setInterval(() => {
+        this.setCountdown--;
+        if (this.setCountdown === 0) clearInterval(setTimer);
+      }, 1000);
+
+      this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
+
+      setTimeout(() => {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+        this.gridColors.fill('transparent');
+
+        currentSet++;
+
+        if (currentSet < this.sets) {
+          this.cooldownCountdown = this.cooldown;
+
+          const cooldownTimer = setInterval(() => {
+            this.cooldownCountdown--;
+            if (this.cooldownCountdown === 0) clearInterval(cooldownTimer);
+          }, 1000);
+
+          setTimeout(() => {
+            this.runSet(currentSet);
+          }, this.cooldown * 1000);
+        }
+      }, this.cycleDuration * 1000);
     },
     stopColorCycle() {
       clearInterval(this.intervalId);
       this.intervalId = null;
       this.countdown = 0;
+      this.setCountdown = 0;
+      this.cooldownCountdown = 0;
       this.gridColors.fill('transparent');
     },
     formatDuration(seconds) {
       const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      return `${minutes > 0 ? minutes + 'm ' : ''}${remainingSeconds}s`;
+      const remaining = seconds % 60;
+      return `${minutes ? minutes + 'm ' : ''}${remaining}s`;
     }
   }
 };
@@ -252,9 +259,10 @@ button, select {
 
 .countdown {
   position: absolute;
-  top: 3em;
-  font-size: 7em;
+  top: 1em;
+  font-size: 9em;
   color: #161c25;
+  font-weight: bold;
 }
 
 .start {
