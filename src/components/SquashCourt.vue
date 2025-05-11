@@ -114,7 +114,10 @@ export default {
         new Audio('/sounds/middle-right.mp3'),
         new Audio('/sounds/back-left.mp3'),
         new Audio('/sounds/back-right.mp3')
-      ]
+      ],
+      timeoutIds: [],
+      setTimer: null,
+      cooldownTimer: null
     };
   },
   computed: {
@@ -175,18 +178,19 @@ export default {
           this.runSet(currentSet);
         }
       }, 1000);
+      this.timeoutIds.push(preStart);
     },
     runSet(currentSet) {
       this.setCountdown = this.cycleDuration;
 
-      const setTimer = setInterval(() => {
+      this.setTimer = setInterval(() => {
         this.setCountdown--;
-        if (this.setCountdown === 0) clearInterval(setTimer);
+        if (this.setCountdown === 0) clearInterval(this.setTimer);
       }, 1000);
 
       this.intervalId = setInterval(this.changeColor, this.colorChangeInterval);
 
-      setTimeout(() => {
+      const endOfSet = setTimeout(() => {
         clearInterval(this.intervalId);
         this.intervalId = null;
         this.gridColors.fill('transparent');
@@ -196,20 +200,33 @@ export default {
         if (currentSet < this.sets) {
           this.cooldownCountdown = this.cooldown;
 
-          const cooldownTimer = setInterval(() => {
+          this.cooldownTimer = setInterval(() => {
             this.cooldownCountdown--;
-            if (this.cooldownCountdown === 0) clearInterval(cooldownTimer);
+            if (this.cooldownCountdown === 0) clearInterval(this.cooldownTimer);
           }, 1000);
 
-          setTimeout(() => {
+          const nextSetTimeout = setTimeout(() => {
             this.runSet(currentSet);
           }, this.cooldown * 1000);
+
+          this.timeoutIds.push(this.cooldownTimer, nextSetTimeout);
         }
       }, this.cycleDuration * 1000);
+
+      this.timeoutIds.push(this.setTimer, this.intervalId, endOfSet);
     },
     stopColorCycle() {
       clearInterval(this.intervalId);
+      clearInterval(this.setTimer);
+      clearInterval(this.cooldownTimer);
+
+      this.timeoutIds.forEach(id => clearTimeout(id));
+      this.timeoutIds = [];
+
       this.intervalId = null;
+      this.setTimer = null;
+      this.cooldownTimer = null;
+
       this.countdown = 0;
       this.setCountdown = 0;
       this.cooldownCountdown = 0;
