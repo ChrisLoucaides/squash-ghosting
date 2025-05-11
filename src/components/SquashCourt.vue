@@ -11,12 +11,29 @@
             <h3 class="modal-title" id="exampleModalLabel">Squash Ghoster (Beta)</h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body ghoster-info">
-            <!--TODO Implement Me-->
+          <div class="modal-body ghoster-info" style="text-align: left;">
+            <h5><strong>Welcome to Squash Ghoster (Beta)!</strong></h5>
+            <p>This tool is designed to help you simulate squash footwork drills by providing visual and auditory cues on a squash court diagram.</p>
+
+            <ul>
+              <li><strong>Start Ghosting:</strong> Click the green "Start Ghosting" button to begin. You'll get a 3-second countdown before the session starts.</li>
+              <li><strong>Stop Ghosting:</strong> Use the red "Stop Ghosting" button to end the session at any time.</li>
+              <li><strong>Difficulty:</strong> Choose between Easy, Medium, or Hard. This affects how quickly the positions change.</li>
+              <li><strong>Duration:</strong> Set how long each set lasts using the time dropdown (e.g., 30 seconds, 1 minute).</li>
+              <li><strong>Rally Type:</strong> Focus the ghosting pattern on forehand, backhand, volleys, short game, or use full-court movement.
+                Note that the rally types aren't limited to each side, they have a very small chance for the side to change, to simulate something like an opponent playing boast.</li>
+              <li><strong>Sets:</strong> Choose how many sets you'd like to do.</li>
+              <li><strong>Cooldown:</strong> Add a cooldown period between sets to rest.</li>
+            </ul>
+
+            <p>Each zone lights up with a green overlay and a corresponding sound to indicate where to move. Try to mimic your footwork as if you're playing an actual point!</p>
+
+            <p><strong>Note:</strong> This is still in beta, so we welcome feedback to improve your training experience.</p>
           </div>
+
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
@@ -323,6 +340,10 @@ select {
 .hard {
   color: red;
   border: 3px solid red;
+}
+
+.ghoster-info {
+  text-align: left;
 }
 
 .difficulty-class {
