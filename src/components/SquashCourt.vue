@@ -286,10 +286,12 @@ button, select {
 
 .start {
   background-color: green;
+  color: white;
 }
 
 .stop {
   background-color: #57010e;
+  color: white;
 }
 
 select {
