@@ -235,6 +235,7 @@ export default {
   width: 100%;
   max-width: 480px;
   height: auto;
+  position: relative;
 }
 
 svg {
@@ -273,11 +274,15 @@ button, select {
 
 .countdown {
   position: absolute;
-  top: 1em;
-  font-size: 9em;
+  top: 0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7.5em;
   color: #161c25;
   font-weight: bold;
+  z-index: 10;
 }
+
 
 .start {
   background-color: green;
